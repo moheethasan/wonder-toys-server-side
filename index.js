@@ -74,9 +74,19 @@ async function run() {
     });
 
     // update toy data
-    app.patch("/updateToy/:id",async(req,res)=>{
+    app.patch("/updateToy/:id", async (req, res) => {
       const id = req.params.id;
-      const 
+      const body = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const updateDoc = {
+        $set: {
+          price: body.price,
+          available_quantity: body.available_quantity,
+          detail_description: body.detail_description,
+        },
+      };
+      const result = await toyCollection.updateOne(filter, updateDoc);
+      res.send(result);
     });
 
     // Send a ping to confirm a successful connection
