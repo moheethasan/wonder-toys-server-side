@@ -27,11 +27,13 @@ async function run() {
 
     const toyCollection = client.db("wonderToysDB").collection("toys");
 
+    // get the toys data
     app.get("/allToys", async (req, res) => {
       const result = await toyCollection.find().limit(20).toArray();
       res.send(result);
     });
 
+    // get specific toy data
     app.get("/allToys/:id", async (req, res) => {
       const id = req.params.id;
       console.log(id);
@@ -40,6 +42,7 @@ async function run() {
       res.send(result);
     });
 
+    // get specific toy category data
     app.get("/toysCategory/:category", async (req, res) => {
       const category = req.params.category;
       if (
@@ -55,10 +58,25 @@ async function run() {
       }
     });
 
+    // post a toy data
     app.post("/addToy", async (req, res) => {
       const toy = req.body;
       const result = await toyCollection.insertOne(toy);
       res.send(result);
+    });
+
+    // get user toy data
+    app.get("/myToys", async (req, res) => {
+      const email = req.query.email;
+      const query = { seller_email: email };
+      const result = await toyCollection.find(query).toArray();
+      res.send(result);
+    });
+
+    // update toy data
+    app.patch("/updateToy/:id",async(req,res)=>{
+      const id = req.params.id;
+      const 
     });
 
     // Send a ping to confirm a successful connection
