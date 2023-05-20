@@ -40,6 +40,21 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/toysCategory/:category", async (req, res) => {
+      const category = req.params.category;
+      if (
+        category === "Monster Truck" ||
+        category === "Regular Car" ||
+        category === "Ambulance Car" ||
+        category === "Police Car"
+      ) {
+        const result = await toyCollection
+          .find({ sub_category: category })
+          .toArray();
+        return res.send(result);
+      }
+    });
+
     app.post("/addToy", async (req, res) => {
       const toy = req.body;
       const result = await toyCollection.insertOne(toy);
