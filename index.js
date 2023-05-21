@@ -23,9 +23,15 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    client.connect();
 
     const toyCollection = client.db("wonderToysDB").collection("toys");
+
+    // get the toys data
+    app.get("/allToys", async (req, res) => {
+      const result = await toyCollection.find().limit(20).toArray();
+      res.send(result);
+    });
 
     // creating index on name field
     toyCollection.createIndex({ name: 1 });
@@ -35,12 +41,6 @@ async function run() {
       const result = await toyCollection
         .find({ name: { $regex: searchedText, $options: "i" } })
         .toArray();
-      res.send(result);
-    });
-
-    // get the toys data
-    app.get("/allToys", async (req, res) => {
-      const result = await toyCollection.find().limit(20).toArray();
       res.send(result);
     });
 
