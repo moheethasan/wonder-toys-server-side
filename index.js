@@ -27,6 +27,17 @@ async function run() {
 
     const toyCollection = client.db("wonderToysDB").collection("toys");
 
+    // creating index on name field
+    toyCollection.createIndex({ name: 1 });
+
+    app.get("/searchToyByName/:name", async (req, res) => {
+      const searchedText = req.params.name;
+      const result = await toyCollection
+        .find({ name: { $regex: searchedText, $options: "i" } })
+        .toArray();
+      res.send(result);
+    });
+
     // get the toys data
     app.get("/allToys", async (req, res) => {
       const result = await toyCollection.find().limit(20).toArray();
