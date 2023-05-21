@@ -108,6 +108,28 @@ async function run() {
       res.send(result);
     });
 
+    // sort price ascending
+    app.get("/ascending", async (req, res) => {
+      const email = req.query.email;
+      const query = { seller_email: email };
+      const result = await toyCollection
+        .find(query)
+        .sort({ price: 1 })
+        .toArray();
+      res.send(result);
+    });
+
+    // sort price descending
+    app.get("/descending", async (req, res) => {
+      const email = req.query.email;
+      const query = { seller_email: email };
+      const result = await toyCollection
+        .find(query)
+        .sort({ price: -1 })
+        .toArray();
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
